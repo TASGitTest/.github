@@ -1,5 +1,3 @@
-# Environment Setup
-
 # Install Tools
 I will be going over the install and set-up of these tools:
 - Git
@@ -56,12 +54,50 @@ This creates the programs you need to 'explode' and 'implode' L5X files and, in 
 - Click the 'Environment Variables...' button
 - Select the Path variable and click the 'Edit...' button
 - Click 'New' and type in the directory for the repo plus the following:
-	- `{REPO FILE PATH}\bin\Release`
+	- `{REPO FILE PATH}\ra-logix-designer-vcs-custom-tools\bin\Release`
 
 ### Studio 5000 Integration
 To add git functionality to Logix Designer:
 - Open the file explorer and navigate to the repo Assets folder:
 	- `~\artifacts\bin\release\Assets\`
-- Inside you should find the `CustomToolsMenu.xml` file. Copy it and place it in this folder:
+- If you are comfortable editing the file you can add the new tools to the file `CustomToolsMenu.xml` in the location below or you can copy and paste your new `CustomToolsMenu.xml` file in this folder:
 	- `C:\Program Files (x86)\Rockwell Software\RSLogix 5000\Common\`
 
+It is also recommended to add a global `.gitignore` file to your VM or profile to prevent errors during the commit stage.
+
+#### Add Global .gitignore
+Open your terminal and navigate to your profile on windows:
+
+``` bash
+# Check if you're already there by looking at the terminal starting point
+C:\Users\{YOUR USERNAME HERE}
+
+# If you do not see the above
+cd 'C:\Users\{YOUR USERNAME HERE}'
+```
+
+Once there we will create and set a global `.gitignore` file of all the files we don't want to track. The Sem and Wrk files especially as they are open when we use the commit tool in Logix and will cause the commit to fail. To create the file and use it:
+
+``` bash
+# Creates .gitignore_global and adds these parameters to it
+echo "**/*.Sem`n**/*.Wrk`n**/*.Bak" >> .gitignore_global
+# Adds .gitignore_global to the excluded files reference in the config file
+git config --global core.excludesfile "~/.gitignore_global"
+```
+
+If you have issues with commits while in Logix Designer, try this:
+
+``` bash
+# Navigate to your repo
+cd {YOUR GIT REPO FILEPATH}
+# Clear the tracked files cache
+git rm -rf --cache .
+# Add your local .gitignore if you have one
+git add .gitignore
+# Add all your files in the folder to the repo
+git add .
+# Commit all the newly added files in the repo
+git commit -m "Recommit all files"
+# Push your commit to github
+git push origin main
+```
